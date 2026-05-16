@@ -166,4 +166,125 @@
         else if (query.includes('medical') || query.includes('hospital') || query.includes('ಆರೋಗ್ಯ') || query.includes('ಮೆಡಿಕಲ್')) {
             return 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=600&auto=format&fit=crop&q=80';
         } else if (query.includes('provision') || query.includes('ಅಂಗಡಿ') || query.includes('kirani') || query.includes('ಸ್ಟೋರ್ಸ್')) {
-            return '
+            return 'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&auto=format&fit=crop&q=80';
+        }
+        return '';
+    }
+
+    function openPanel(id) {
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('panel-' + id).classList.add('active');
+        if(event && event.target) {
+            event.target.classList.add('active');
+        }
+    }
+
+    async function loadEncyclopedia() {
+        const res = await fetch('/api/village-encyclopedia');
+        const data = await res.json();
+
+        // 1. Render Transit Tab
+        const tBody = document.getElementById('table-transport');
+        tBody.innerHTML = '';
+        data.rates.forEach(r => {
+            tBody.innerHTML += `<tr>
+                <td><span class="badge" style="background:#e6fffa; color:#006d77;">${r.category}</span><br><strong>${r.item_name}</strong><br><small style="color:#718096;">${r.details}</small></td>
+                <td style="color:#2d6a4f; font-weight:bold; font-size:15px; vertical-align:middle; white-space:nowrap;">${r.price_or_time}</td>
+            </tr>`;
+        });
+
+        // 2. Render Profile Places Layout (Temples handled inside static Gods panel)
+        const pList = document.getElementById('list-places');
+        pList.innerHTML = '';
+        data.places.forEach(p => {
+            if (p.place_name.toLowerCase().includes('temple') || p.place_name.includes('ದೇವಸ್ಥಾನ')) return;
+            
+            let badgeColor = p.category === 'Info' ? 'background:#feebc8; color:#c05621;' : 'background:#e2e8f0; color:#4a5568;';
+            let photoUrl = getDirectVillagePhoto(p.place_name);
+            
+            pList.innerHTML += `<div class="card" style="border-left-color: ${p.category === 'Info' ? '#dd6b20' : '#40916c'}">
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${p.place_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="${badgeColor}">${p.category.toUpperCase()}</span>
+                    <h3>${p.place_name}</h3>
+                    <p>${p.description}</p>
+                    <p style="margin-top:8px; font-size:12px; color:#2d6a4f;">⏱️ <strong>Access/Timings:</strong> ${p.timings}</p>
+                </div>
+            </div>`;
+        });
+
+        // 3. Render Retail, Crops & Stores Layout
+        const sList = document.getElementById('list-shops');
+        sList.innerHTML = '';
+        data.commercial.forEach(s => {
+            let isMarket = s.category === 'Market';
+            let photoUrl = getDirectVillagePhoto(s.shop_or_crop_name);
+            
+            sList.innerHTML += `<div class="card" style="border-left-color: ${isMarket ? '#e53e3e' : '#3182ce'}">
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${s.shop_or_crop_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="background:${isMarket ? '#fff5f5':'#ebf8ff'}; color:${isMarket ? '#c53030':'#2b6cb0'};">${s.category.toUpperCase()}</span>
+                    <h3>${s.shop_or_crop_name}</h3>
+                    <p style="${isMarket ? 'color:#c53030; font-weight:bold; font-size:16px;' : 'color:#2d3748;'}">${s.contact_or_rate}</p>
+                    ${s.details ? `<p style="font-size:12px; color:#718096; margin-top:5px;">ℹ️ ${s.details}</p>` : ''}
+                </div>
+            </div>`;
+        });
+
+        // 4. Render Helpline Directory
+        const wBody = document.getElementById('table-workers');
+        wBody.innerHTML = '';
+        data.workers.forEach(w => {
+            wBody.innerHTML += `<tr>
+                <td><strong>${w.worker_name}</strong><br><small style="color:#718096;">${w.profession}</small></td>
+                <td style="vertical-align:middle; text-align:right;"><a href="tel:${w.phone_number}" class="btn-call">📞 Call</a></td>
+            </tr>`;
+        });
+
+        // 5. Render Notices Bulletin Board
+        const nList = document.getElementById('list-notices');
+        nList.innerHTML = '';
+        data.notices.forEach(n => {
+            nList.innerHTML += `<div class="card" style="border-left-color:#dd6b20; padding:16px;">
+                <h3>${n.title}</h3>
+                <p>${n.content}</p>
+                <p style="text-align:right; margin:4px 0 0; font-size:11px; color:#a0aec0;">📅 Posted: ${n.date}</p>
+            </div>`;
+        });
+    }
+
+    async function loginAdmin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: u, password: p})
+        });
+        if(res.status === 200) {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('post-box').style.display = 'block';
+        } else {
+            alert("Credentials mismatch!");
+        }
+    }
+
+    async function publishNotice() {
+        const title = document.getElementById('ntitle').value;
+        const content = document.getElementById('ncontent').value;
+        if(!title || !content) return alert("Please specify description parameters.");
+
+        await fetch('/api/notices/add', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({title, content})
+        });
+        document.getElementById('ntitle').value = '';
+        document.getElementById('ncontent').value = '';
+        loadEncyclopedia();
+        openPanel('news');
+    }
+</script>
+</body>
+</html>
