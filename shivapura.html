@@ -11,7 +11,7 @@
         .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
         .header p { margin: 6px 0 0; font-size: 13px; opacity: 0.9; font-style: italic; }
         
-        /* Scrollable Navigation Bar */
+        /* Fixed Horizontal Scrolling Mobile Nav Links */
         .tabs { display: flex; background: #2d6a4f; overflow-x: auto; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); scrollbar-width: none; }
         .tabs::-webkit-scrollbar { display: none; }
         .tab { flex: 1; text-align: center; color: white; padding: 15px 14px; border: none; background: none; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap; }
@@ -21,15 +21,15 @@
         .view-panel { display: none; }
         .view-panel.active { display: block; }
         
-        /* Card & Image Layouts */
+        /* Card Layouts */
         .card { background: white; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); overflow: hidden; display: flex; flex-direction: column; }
-        .card-img { width: 100%; height: 180px; object-fit: cover; background: #e2e8f0; display: block; }
+        .card-img { width: 100%; height: 200px; object-fit: cover; background-color: #edf2f7; display: block; border-bottom: 1px solid #edf2f7; }
         .card-body { padding: 16px; }
         .card h3 { margin: 0 0 6px 0; color: var(--primary); font-size: 16px; font-weight: 700; }
         .card p { margin: 0; font-size: 14px; color: #4a5568; line-height: 1.5; }
         .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin-bottom: 8px; text-transform: uppercase; width: fit-content; }
         
-        /* Google Maps Wrapper */
+        /* Map Layout */
         .map-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
         .map-iframe { width: 100%; height: 260px; border: 0; display: block; }
 
@@ -71,7 +71,12 @@
         <h3 style="color:var(--primary); margin: 5px 0 12px;">🏛️ Administrative Profile, Schools & Offices</h3>
         
         <div class="map-card">
-            <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3861.328362483838!2d76.350!3d14.880!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb77b63f53856cb%3A0x7e8b6b14ff2f954f!2sKudligi%2C%20Karnataka%20583135!5e0!3m2!1sen!2sin!4v1710000000000" allowfullscreen="" loading="lazy"></iframe>
+            <iframe 
+                class="map-iframe" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3862.6467362709214!2d76.3888361!3d14.8903333!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb7634f1981cb9f%3A0x647900b3e6c38b2!2sShivapura%2C%20Karnataka%20583135!5e0!3m2!1sen!2sin!4v1716000000000!5m2!1sen!2sin" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
         </div>
         
         <div id="list-places"></div>
@@ -115,31 +120,34 @@
 <script>
     window.onload = loadEncyclopedia;
 
-    // Secure Data URL injector that maps the backend string items directly to open CORS paths
+    // Secure ImgBB Direct CDN link delivery structure mapping your exact 12 photo paths
     function getDirectVillagePhoto(nameField) {
         const query = nameField.toLowerCase();
         
-        // Match conditions reading database strings directly
         if (query.includes('school') || query.includes('ಶಾಲೆ')) {
-            return 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600&q=80';
+            return 'https://i.ibb.co/6RzYQCPn/image.jpg';
         } else if (query.includes('sedabhavi') || query.includes('ಭಾವಿ') || query.includes('well')) {
-            return 'https://images.unsplash.com/photo-1508433957232-3107a50fe977?w=600&q=80';
+            return 'https://i.ibb.co/JWtqXfSp/image.jpg';
         } else if (query.includes('grama one') || query.includes('ಗ್ರಾಮ ಒನ್')) {
-            return 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80';
+            return 'https://i.ibb.co/mrvS7JRQ/image.jpg';
         } else if (query.includes('temple') || query.includes('ದೇವಸ್ಥಾನ') || query.includes('ಗುಡಿ')) {
-            return 'https://images.unsplash.com/photo-1542442828-2572bc7e997a?w=600&q=80';
+            return 'https://i.ibb.co/DPcYfRJf/image.jpg';
         } else if (query.includes('library') || query.includes('ಗ್ರಂಥಾಲಯ')) {
-            return 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&q=80';
-        } else if (query.includes('medical') || query.includes('hospital') || query.includes('ಆರೋಗ್ಯ')) {
-            return 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&q=80';
+            return 'https://i.ibb.co/nsPKPc6K/image.jpg';
+        } else if (query.includes('medical') || query.includes('ಆರೋಗ್ಯ')) {
+            return 'https://i.ibb.co/DPVMQkT1/image.jpg';
         } else if (query.includes('panchayat') || query.includes('ಪಂಚಾಯತ್')) {
-            return 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=600&q=80';
-        } else if (query.includes('provision') || query.includes('ಅಂಗಡಿ')) {
-            return 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600&q=80';
+            return 'https://i.ibb.co/fVr1ShSQ/image.jpg';
+        } else if (query.includes('bus') || query.includes('ಬಸ್')) {
+            return 'https://i.ibb.co/FqLcb9Vz/image.jpg';
+        } else if (query.includes('water') || query.includes('ನೀರು')) {
+            return 'https://i.ibb.co/jPQHt4SY/image.jpg';
+        } else if (query.includes('provision') || query.includes('ಅಂಗಡಿ') || query.includes('kirani')) {
+            return 'https://i.ibb.co/tM6QJ6jq/image.jpg';
         } else if (query.includes('groundnut') || query.includes('ಕಡಲೇಕಾಯಿ')) {
-            return 'https://images.unsplash.com/photo-1569470530743-34e40268a62f?w=600&q=80';
+            return 'https://i.ibb.co/FL0kxhTK/image.jpg';
         } else if (query.includes('maize') || query.includes('ಮೆಕ್ಕೆಜೋಳ')) {
-            return 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=600&q=80';
+            return 'https://i.ibb.co/2Yyx9JT6/image.jpg';
         }
         return '';
     }
@@ -175,7 +183,7 @@
             let photoUrl = getDirectVillagePhoto(p.place_name);
             
             pList.innerHTML += `<div class="card" style="border-left-color: ${p.category === 'Info' ? '#dd6b20' : '#40916c'}">
-                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${p.place_name}" onerror="this.style.display='none'">` : ''}
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${p.place_name}">` : ''}
                 <div class="card-body">
                     <span class="badge" style="${badgeColor}">${p.category.toUpperCase()}</span>
                     <h3>${p.place_name}</h3>
@@ -193,7 +201,7 @@
             let photoUrl = getDirectVillagePhoto(s.shop_or_crop_name);
             
             sList.innerHTML += `<div class="card" style="border-left-color: ${isMarket ? '#e53e3e' : '#3182ce'}">
-                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${s.shop_or_crop_name}" onerror="this.style.display='none'">` : ''}
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${s.shop_or_crop_name}">` : ''}
                 <div class="card-body">
                     <span class="badge" style="background:${isMarket ? '#fff5f5':'#ebf8ff'}; color:${isMarket ? '#c53030':'#2b6cb0'};">${s.category.toUpperCase()}</span>
                     <h3>${s.shop_or_crop_name}</h3>
