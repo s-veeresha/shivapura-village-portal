@@ -6,13 +6,14 @@
     <title>ಶಿವಪುರ ಮಾಹಿತಿ ಕಣಜ • Shivapura Portal</title>
     <style>
         :root { --primary: #1b4332; --secondary: #40916c; --bg: #f5f7f6; }
-        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: #2d3748; }
+        body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: #2d3748; padding-bottom: 30px; }
         .header { background: linear-gradient(135deg, #2d6a4f, #1b4332); color: white; text-align: center; padding: 24px 12px; border-bottom: 4px solid #d8f3dc; }
         .header h1 { margin: 0; font-size: 22px; font-weight: 700; }
         .header p { margin: 6px 0 0; font-size: 13px; opacity: 0.9; font-style: italic; }
         
         /* Fixed Horizontal Scrolling Mobile Nav Links */
-        .tabs { display: flex; background: #2d6a4f; overflow-x: auto; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tabs { display: flex; background: #2d6a4f; overflow-x: auto; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); scrollbar-width: none; }
+        .tabs::-webkit-scrollbar { display: none; }
         .tab { flex: 1; text-align: center; color: white; padding: 15px 14px; border: none; background: none; font-weight: bold; font-size: 13px; cursor: pointer; white-space: nowrap; }
         .tab.active { background: var(--primary); border-bottom: 4px solid #ffca28; }
         
@@ -21,12 +22,18 @@
         .view-panel.active { display: block; }
         
         /* Interface Card Styling */
-        .card { background: white; padding: 16px; margin-bottom: 12px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); border-left: 5px solid var(--secondary); }
+        .card { background: white; margin-bottom: 15px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border-left: 5px solid var(--secondary); overflow: hidden; display: flex; flex-direction: column; }
+        .card-img { width: 100%; height: 160px; object-fit: cover; background-color: #edf2f7; display: block; border-bottom: 1px solid #edf2f7; }
+        .card-body { padding: 16px; }
         .card h3 { margin: 0 0 6px 0; color: var(--primary); font-size: 16px; font-weight: 700; }
         .card p { margin: 0; font-size: 14px; color: #4a5568; line-height: 1.5; }
-        .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin-bottom: 8px; text-transform: uppercase; }
+        .badge { display: inline-block; background: #e8f5e9; color: #1b5e20; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 30px; margin-bottom: 8px; text-transform: uppercase; width: fit-content; }
         
-        table { width: 100%; background: white; border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 15px; }
+        /* Fixed Live Map Box Layout */
+        .map-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .map-iframe { width: 100%; height: 280px; border: 0; display: block; }
+
+        table { width: 100%; background: white; border-collapse: collapse; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 15px; }
         th, td { padding: 14px; text-align: left; border-bottom: 1px solid #edf2f7; font-size: 14px; }
         th { background: #d8f3dc; color: var(--primary); font-weight: bold; }
         
@@ -46,7 +53,7 @@
     <button class="tab active" onclick="openPanel('transport')">🚌 ಸಾರಿಗೆ & ದರ (Transit)</button>
     <button class="tab" onclick="openPanel('places')">🏛️ ಭೌಗೋಳಿಕ ವಿವರ (Profile)</button>
     <button class="tab" onclick="openPanel('shops')">🛒 ಅಂಗಡಿ & ಬೆಳೆ (Shops)</button>
-    <button class="tab" onclick="openPanel('workers')">📞 ಸಹಾಯವಾಣಿ (Workers)</button>
+    <button class="tab" onclick="openPanel('workers')">📞 Helpline</button>
     <button class="tab" onclick="openPanel('news')">📢 ಪಂಚಾಯತ್ ಫಲಕ (News)</button>
 </div>
 
@@ -62,6 +69,16 @@
 
     <div id="panel-places" class="view-panel">
         <h3 style="color:var(--primary); margin: 5px 0 12px;">🏛️ Administrative Profile, Schools & Offices</h3>
+        
+        <div class="map-card">
+            <iframe 
+                class="map-iframe" 
+                src="https://maps.google.com/maps?q=Shivapura,Kudligi,Karnataka,India&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                allowfullscreen="" 
+                loading="lazy">
+            </iframe>
+        </div>
+        
         <div id="list-places"></div>
     </div>
 
@@ -103,18 +120,51 @@
 <script>
     window.onload = loadEncyclopedia;
 
+    // Secure image selector connecting your exact direct image CDN strings
+    function getDirectVillagePhoto(nameField) {
+        const query = nameField.toLowerCase();
+        if (query.includes('school') || query.includes('ಶಾಲೆ')) {
+            return 'https://images2.imgbox.com/ce/90/6RzYQCPn_o.jpg';
+        } else if (query.includes('sedabhavi') || query.includes('ಭಾವಿ') || query.includes('well')) {
+            return 'https://images2.imgbox.com/a4/bf/JWtqXfSp_o.jpg';
+        } else if (query.includes('grama one') || query.includes('ಗ್ರಾಮ ಒನ್')) {
+            return 'https://images2.imgbox.com/39/10/mrvS7JRQ_o.jpg';
+        } else if (query.includes('temple') || query.includes('ದೇವಸ್ಥಾನ') || query.includes('ಗುಡಿ')) {
+            return 'https://images2.imgbox.com/b9/62/DPcYfRJf_o.jpg';
+        } else if (query.includes('library') || query.includes('ಗ್ರಂಥಾಲಯ')) {
+            return 'https://images2.imgbox.com/83/7d/nsPKPc6K_o.jpg';
+        } else if (query.includes('medical') || query.includes('hospital') || query.includes('ಆರೋಗ್ಯ')) {
+            return 'https://images2.imgbox.com/a6/50/DPVMQkT1_o.jpg';
+        } else if (query.includes('panchayat') || query.includes('ಪಂಚಾಯತ್')) {
+            return 'https://images2.imgbox.com/7b/9e/fVr1ShSQ_o.jpg';
+        } else if (query.includes('bus') || query.includes('ಬಸ್')) {
+            return 'https://images2.imgbox.com/ee/6c/FqLcb9Vz_o.jpg';
+        } else if (query.includes('water') || query.includes('ನೀರು')) {
+            return 'https://images2.imgbox.com/00/01/jPQHt4SY_o.jpg';
+        } else if (query.includes('provision') || query.includes('ಅಂಗಡಿ') || query.includes('kirani')) {
+            return 'https://images2.imgbox.com/c6/3a/tM6QJ6jq_o.jpg';
+        } else if (query.includes('groundnut') || query.includes('ಕಡಲೇಕಾಯಿ')) {
+            return 'https://images2.imgbox.com/65/ab/FL0kxhTK_o.jpg';
+        } else if (query.includes('maize') || query.includes('ಮೆಕ್ಕೆಜೋಳ')) {
+            return 'https://images2.imgbox.com/13/44/2Yyx9JT6_o.jpg';
+        }
+        return '';
+    }
+
     function openPanel(id) {
         document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.getElementById('panel-' + id).classList.add('active');
-        event.target.classList.add('active');
+        if(event && event.target) {
+            event.target.classList.add('active');
+        }
     }
 
     async function loadEncyclopedia() {
         const res = await fetch('/api/village-encyclopedia');
         const data = await res.json();
 
-        // 1. Render Transit
+        // 1. Render Transit Tab
         const tBody = document.getElementById('table-transport');
         tBody.innerHTML = '';
         data.rates.forEach(r => {
@@ -124,33 +174,43 @@
             </tr>`;
         });
 
-        // 2. Render Profile & Places
+        // 2. Render Places & Administrative Profile Layout
         const pList = document.getElementById('list-places');
         pList.innerHTML = '';
         data.places.forEach(p => {
             let badgeColor = p.category === 'Info' ? 'background:#feebc8; color:#c05621;' : 'background:#e2e8f0; color:#4a5568;';
+            let photoUrl = getDirectVillagePhoto(p.place_name);
+            
             pList.innerHTML += `<div class="card" style="border-left-color: ${p.category === 'Info' ? '#dd6b20' : '#40916c'}">
-                <span class="badge" style="${badgeColor}">${p.category.toUpperCase()}</span>
-                <h3>${p.place_name}</h3>
-                <p>${p.description}</p>
-                <p style="margin-top:8px; font-size:12px; color:#2d6a4f;">⏱️ <strong>Access/Timings:</strong> ${p.timings}</p>
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${p.place_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="${badgeColor}">${p.category.toUpperCase()}</span>
+                    <h3>${p.place_name}</h3>
+                    <p>${p.description}</p>
+                    <p style="margin-top:8px; font-size:12px; color:#2d6a4f;">⏱️ <strong>Access/Timings:</strong> ${p.timings}</p>
+                </div>
             </div>`;
         });
 
-        // 3. Render Retail & Crops
+        // 3. Render Retail, Crops & Market Banners
         const sList = document.getElementById('list-shops');
         sList.innerHTML = '';
         data.commercial.forEach(s => {
             let isMarket = s.category === 'Market';
+            let photoUrl = getDirectVillagePhoto(s.shop_or_crop_name);
+            
             sList.innerHTML += `<div class="card" style="border-left-color: ${isMarket ? '#e53e3e' : '#3182ce'}">
-                <span class="badge" style="background:${isMarket ? '#fff5f5':'#ebf8ff'}; color:${isMarket ? '#c53030':'#2b6cb0'};">${s.category.toUpperCase()}</span>
-                <h3>${s.shop_or_crop_name}</h3>
-                <p style="${isMarket ? 'color:#c53030; font-weight:bold; font-size:16px;' : 'color:#2d3748;'}">${s.contact_or_rate}</p>
-                ${s.details ? `<p style="font-size:12px; color:#718096; margin-top:5px;">ℹ️ ${s.details}</p>` : ''}
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${s.shop_or_crop_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="background:${isMarket ? '#fff5f5':'#ebf8ff'}; color:${isMarket ? '#c53030':'#2b6cb0'};">${s.category.toUpperCase()}</span>
+                    <h3>${s.shop_or_crop_name}</h3>
+                    <p style="${isMarket ? 'color:#c53030; font-weight:bold; font-size:16px;' : 'color:#2d3748;'}">${s.contact_or_rate}</p>
+                    ${s.details ? `<p style="font-size:12px; color:#718096; margin-top:5px;">ℹ️ ${s.details}</p>` : ''}
+                </div>
             </div>`;
         });
 
-        // 4. Render Local Help Lines
+        // 4. Render Helpline Workers Table
         const wBody = document.getElementById('table-workers');
         wBody.innerHTML = '';
         data.workers.forEach(w => {
@@ -160,11 +220,11 @@
             </tr>`;
         });
 
-        // 5. Render Announcements
+        // 5. Render Bulletin Board Notices
         const nList = document.getElementById('list-notices');
         nList.innerHTML = '';
         data.notices.forEach(n => {
-            nList.innerHTML += `<div class="card" style="border-left-color:#dd6b20;">
+            nList.innerHTML += `<div class="card" style="border-left-color:#dd6b20; padding:16px;">
                 <h3>${n.title}</h3>
                 <p>${n.content}</p>
                 <p style="text-align:right; margin:4px 0 0; font-size:11px; color:#a0aec0;">📅 Posted: ${n.date}</p>
