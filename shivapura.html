@@ -71,4 +71,219 @@
     <div id="panel-gods" class="view-panel">
         <h3 style="color:var(--primary); margin: 5px 0 12px;">🙏 Shivapura Village Temples & God Photos</h3>
         
-        <div class="card" style="border-left
+        <div class="card" style="border-left-color: #ff9800;">
+            <img class="card-img" src="https://i.ibb.co/DPcYfRJf/image.jpg" alt="Maruti Temple">
+            <div class="card-body">
+                <span class="badge" style="background:#fff3e0; color:#e65100;">ದೇವಸ್ಥಾನ</span>
+                <h3>ಶ್ರೀ ಮಾರುತಿ ಪ್ರಸನ್ನ ದೇವಸ್ಥಾನ (Maruti Temple)</h3>
+                <p>ಶಿವಪುರ ಗ್ರಾಮದ ಹೃದಯ ಭಾಗದಲ್ಲಿರುವ ಪುರಾತನ ಜಾಗೃತ ಆಂಜನೇಯ ಸ್ವಾಮಿ ಸನ್ನಿಧಿ. ಪ್ರತಿನಿತ್ಯ ವಿಶೇಷ ಪೂಜೆ ಹಾಗೂ ಕಾರ್ತಿಕೋತ್ಸವಗಳು ಇಲ್ಲಿ ಜರುಗುತ್ತವೆ.</p>
+            </div>
+        </div>
+
+        <div class="card" style="border-left-color: #ff9800;">
+            <img class="card-img" src="https://i.ibb.co/FL0kxhTK/image.jpg" alt="Village Deity">
+            <div class="card-body">
+                <span class="badge" style="background:#fff3e0; color:#e65100;">ಗ್ರಾಮ ದೇವತೆ</span>
+                <h3>ಗ್ರಾಮ ದೇವತೆ ದರ್ಶನ ಹಾಗೂ ಹಬ್ಬದ ಆಚರಣೆ</h3>
+                <p>ಊರಿನ ಕಡಲೇಕಾಯಿ ಮತ್ತು ಧಾನ್ಯದ ಇಳುವರಿ ಉತ್ತಮವಾಗಿ ಬರಲು ಗ್ರಾಮಸ್ಥರೆಲ್ಲರೂ ಒಟ್ಟಾಗಿ ಆಚರಿಸುವ ವಿಶೇಷ ಧಾರ್ಮಿಕ ಪೂಜಾ ಕೈಂಕರ್ಯಗಳು.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="panel-places" class="view-panel">
+        <h3 style="color:var(--primary); margin: 5px 0 12px;">🏛️ Administrative Profile, Schools & Offices</h3>
+        
+        <div class="map-card">
+            <iframe class="map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15447.199411985392!2d76.38000000000001!3d14.830000000000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i1024!3m4!1s0x3bb77ea2327ee097%3A0xf635879837f10b66!2m2!1d76.3869!2d14.8354!5e0!3m2!1skn!2sin!4v1710000000000" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+        
+        <div id="list-places"></div>
+    </div>
+
+    <div id="panel-shops" class="view-panel">
+        <h3 style="color:var(--primary); margin: 5px 0 12px;">🛒 Kirani Retailers, Medicals & APMC Crop Rates</h3>
+        <div id="list-shops"></div>
+    </div>
+
+    <div id="panel-workers" class="view-panel">
+        <h3 style="color:var(--primary); margin: 5px 0 12px;">📞 Village Linemen, Water Operators & Assistance</h3>
+        <table>
+            <thead><tr><th>ಹೆಸರು (Worker Name)</th><th>ಸಂಪರ್ಕಿಸಿ (Action)</th></tr></thead>
+            <tbody id="table-workers"></tbody>
+        </table>
+    </div>
+
+    <div id="panel-news" class="view-panel">
+        <h3 style="color:var(--primary); margin: 5px 0 12px;">📢 Live Village Announcements Board</h3>
+        <div id="list-notices"></div>
+        
+        <div style="margin-top: 30px; background: #fffde7; padding: 16px; border-radius: 12px; border: 1px dashed #ecc94b;">
+            <div id="login-box">
+                <h4 style="margin:0 0 6px 0;">Panchayat Admin Login Box</h4>
+                <input type="text" id="username" class="input-box" placeholder="Admin Username">
+                <input type="password" id="password" class="input-box" placeholder="Admin Password">
+                <button class="btn-main" style="background:#ecc94b; color:#2d3748;" onclick="loginAdmin()">Login to Post Updates</button>
+            </div>
+            <div id="post-box" style="display:none;">
+                <h4 style="margin:0 0 6px 0;">Publish Official News Update</h4>
+                <input type="text" id="ntitle" class="input-box" placeholder="Announcement Title">
+                <textarea id="ncontent" class="input-box" rows="3" placeholder="Write full news text here..."></textarea>
+                <button class="btn-main" onclick="publishNotice()">Publish Live on Main Screen</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.onload = loadEncyclopedia;
+
+    // Direct routing framework supplying matching images to stores, medicals, and schools
+    function getDirectVillagePhoto(nameField) {
+        const query = nameField.toLowerCase();
+        
+        if (query.includes('school') || query.includes('ಶಾಲೆ')) {
+            return 'https://i.ibb.co/6RzYQCPn/image.jpg';
+        } else if (query.includes('sedabhavi') || query.includes('ಭಾವಿ') || query.includes('well')) {
+            return 'https://i.ibb.co/JWtqXfSp/image.jpg';
+        } else if (query.includes('grama one') || query.includes('ಗ್ರಾಮ ಒನ್')) {
+            return 'https://i.ibb.co/mrvS7JRQ/image.jpg';
+        } else if (query.includes('library') || query.includes('ಗ್ರಂಥಾಲಯ')) {
+            return 'https://i.ibb.co/nsPKPc6K/image.jpg';
+        } else if (query.includes('panchayat') || query.includes('ಪಂಚಾಯತ್')) {
+            return 'https://i.ibb.co/fVr1ShSQ/image.jpg';
+        } else if (query.includes('bus') || query.includes('ಬಸ್')) {
+            return 'https://i.ibb.co/FqLcb9Vz/image.jpg';
+        } else if (query.includes('water') || query.includes('ನೀರು')) {
+            return 'https://i.ibb.co/jPQHt4SY/image.jpg';
+        } else if (query.includes('maize') || query.includes('ಮೆಕ್ಕೆಜೋಳ')) {
+            return 'https://i.ibb.co/2Yyx9JT6/image.jpg';
+        } 
+        
+        // Dynamic assignment for Medical and Retail Store databases
+        else if (query.includes('medical') || query.includes('hospital') || query.includes('ಆರೋಗ್ಯ') || query.includes('ಮಡಿಕಲ್')) {
+            return 'https://i.ibb.co/DPVMQkT1/image.jpg';
+        } else if (query.includes('provision') || query.includes('ಅಂಗಡಿ') || query.includes('kirani') || query.includes('ಸ್ಟೋರ್ಸ್')) {
+            return 'https://i.ibb.co/tM6QJ6jq/image.jpg';
+        }
+        return '';
+    }
+
+    function openPanel(id) {
+        document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('panel-' + id).classList.add('active');
+        if(event && event.target) {
+            event.target.classList.add('active');
+        }
+    }
+
+    async function loadEncyclopedia() {
+        const res = await fetch('/api/village-encyclopedia');
+        const data = await res.json();
+
+        // 1. Render Transit Tab
+        const tBody = document.getElementById('table-transport');
+        tBody.innerHTML = '';
+        data.rates.forEach(r => {
+            tBody.innerHTML += `<tr>
+                <td><span class="badge" style="background:#e6fffa; color:#006d77;">${r.category}</span><br><strong>${r.item_name}</strong><br><small style="color:#718096;">${r.details}</small></td>
+                <td style="color:#2d6a4f; font-weight:bold; font-size:15px; vertical-align:middle; white-space:nowrap;">${r.price_or_time}</td>
+            </tr>`;
+        });
+
+        // 2. Render Places Layout
+        const pList = document.getElementById('list-places');
+        pList.innerHTML = '';
+        data.places.forEach(p => {
+            // Filter out temples from profile list since they are now beautifully presented under Gods tab
+            if (p.place_name.toLowerCase().includes('temple') || p.place_name.includes('ದೇವಸ್ಥಾನ')) return;
+            
+            let badgeColor = p.category === 'Info' ? 'background:#feebc8; color:#c05621;' : 'background:#e2e8f0; color:#4a5568;';
+            let photoUrl = getDirectVillagePhoto(p.place_name);
+            
+            pList.innerHTML += `<div class="card" style="border-left-color: ${p.category === 'Info' ? '#dd6b20' : '#40916c'}">
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${p.place_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="${badgeColor}">${p.category.toUpperCase()}</span>
+                    <h3>${p.place_name}</h3>
+                    <p>${p.description}</p>
+                    <p style="margin-top:8px; font-size:12px; color:#2d6a4f;">⏱️ <strong>Access/Timings:</strong> ${p.timings}</p>
+                </div>
+            </div>`;
+        });
+
+        // 3. Render Retail, Crops & Market Banners
+        const sList = document.getElementById('list-shops');
+        sList.innerHTML = '';
+        data.commercial.forEach(s => {
+            let isMarket = s.category === 'Market';
+            let photoUrl = getDirectVillagePhoto(s.shop_or_crop_name);
+            
+            sList.innerHTML += `<div class="card" style="border-left-color: ${isMarket ? '#e53e3e' : '#3182ce'}">
+                ${photoUrl ? `<img class="card-img" src="${photoUrl}" alt="${s.shop_or_crop_name}">` : ''}
+                <div class="card-body">
+                    <span class="badge" style="background:${isMarket ? '#fff5f5':'#ebf8ff'}; color:${isMarket ? '#c53030':'#2b6cb0'};">${s.category.toUpperCase()}</span>
+                    <h3>${s.shop_or_crop_name}</h3>
+                    <p style="${isMarket ? 'color:#c53030; font-weight:bold; font-size:16px;' : 'color:#2d3748;'}">${s.contact_or_rate}</p>
+                    ${s.details ? `<p style="font-size:12px; color:#718096; margin-top:5px;">ℹ️ ${s.details}</p>` : ''}
+                </div>
+            </div>`;
+        });
+
+        // 4. Render Helpline Workers Table
+        const wBody = document.getElementById('table-workers');
+        wBody.innerHTML = '';
+        data.workers.forEach(w => {
+            wBody.innerHTML += `<tr>
+                <td><strong>${w.worker_name}</strong><br><small style="color:#718096;">${w.profession}</small></td>
+                <td style="vertical-align:middle; text-align:right;"><a href="tel:${w.phone_number}" class="btn-call">📞 Call</a></td>
+            </tr>`;
+        });
+
+        // 5. Render Bulletin Board Notices
+        const nList = document.getElementById('list-notices');
+        nList.innerHTML = '';
+        data.notices.forEach(n => {
+            nList.innerHTML += `<div class="card" style="border-left-color:#dd6b20; padding:16px;">
+                <h3>${n.title}</h3>
+                <p>${n.content}</p>
+                <p style="text-align:right; margin:4px 0 0; font-size:11px; color:#a0aec0;">📅 Posted: ${n.date}</p>
+            </div>`;
+        });
+    }
+
+    async function loginAdmin() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: u, password: p})
+        });
+        if(res.status === 200) {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('post-box').style.display = 'block';
+        } else {
+            alert("Credentials mismatch!");
+        }
+    }
+
+    async function publishNotice() {
+        const title = document.getElementById('ntitle').value;
+        const content = document.getElementById('ncontent').value;
+        if(!title || !content) return alert("Please specify description parameters.");
+
+        await fetch('/api/notices/add', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({title, content})
+        });
+        document.getElementById('ntitle').value = '';
+        document.getElementById('ncontent').value = '';
+        loadEncyclopedia();
+        openPanel('news');
+    }
+</script>
+</body>
+</html>
